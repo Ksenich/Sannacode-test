@@ -3,25 +3,25 @@ var assert = chai.assert;
 
 suite('tokenize', function () {
   test('single digit numbers', function () {
-    assert.deepEqual(tokenize('1+2'), ['1', '+', '2'])
+    assert.deepEqual(tokenize('1+2').map(v => v.value), [1, '+', 2])
   });
 
   test('multiple digit numbers', function () {
-    assert.deepEqual(tokenize('78*56'), ['78', '*', '56'])
+    assert.deepEqual(tokenize('78*56').map(v => v.value), [78, '*', 56])
   });
 
-  test('numbers with point', function(){
-    assert.deepEqual(tokenize('23.5*2'), ['23.5', '*', '2'])
+  test('numbers with point', function () {
+    assert.deepEqual(tokenize('23.5*2').map(v => v.value), [23.5, '*', 2])
   })
 });
 
 suite('calculate', function () {
   test('single expression', function () {
-    assert.equal(calculate(['1', '+', '2']), 3);
-    assert.equal(calculate(['1', '-', '2']), -1);
-    assert.equal(calculate(['1', '*', '2']), 2);
-    assert.equal(calculate(['1', '/', '2']), 0.5);
-    assert.equal(calculate(['2', '^', '3']), 8);
+    assert.equal(calculate(tokenize('1+2')), 3);
+    assert.equal(calculate(tokenize('1-2')), -1);
+    assert.equal(calculate(tokenize('2*3')), 6);
+    assert.equal(calculate(tokenize('1/2')), 0.5);
+    assert.equal(calculate(tokenize('2^3')), 8);
   });
 
   test('priority', function () {
