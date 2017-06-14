@@ -52,13 +52,30 @@ function tokenize(str) {
           throw new Error('Illegal operator at ' + token.index);
         }
       }
+
       if (token.type === 'number' && prevToken.type === 'number') {
         throw new Error('Missing operator at ' + token.index);
       }
+
+      if (token.type === 'rp') {
+        if (prevToken.type === 'lp') {
+          throw new Error('Empty parentheses at ' + token.index);
+        }
+
+        if (prevToken.type === 'operator') {
+          throw new Error('Extra operator at ' + prevToken.index);
+        }
+      }
+
       result.push(token);
       prevToken = token;
     }
   }
+
+  if (prevToken.type === 'operator') {
+    throw new Error('Extra operator at ' + prevToken.index);
+  }
+
   return result;
 }
 

@@ -15,7 +15,7 @@ suite('tokenize', function () {
     assert.deepEqual(tokenize('23.5*2').map(v => v.value), [23.5, '*', 2]);
   });
 
-  test('exceptions', function () {
+  test('invalid tokens', function () {
     expect(function () {
       tokenize('safdgfh');
     }).to.throw(/at 0/);
@@ -23,20 +23,40 @@ suite('tokenize', function () {
     expect(function () {
       tokenize('1 + ( 5 * 6afdsg');
     }).to.throw(/at 11/);
-    
+
     expect(function () {
       tokenize('1 + 5.5.5');
     }).to.throw(/at 4/);
+  });
 
+  test('malformed expressions', function () {
     expect(function () {
       tokenize('1 +  5 * / 6');
     }).to.throw('Illegal operator at 9');
-    
+
     expect(function () {
       tokenize('1 +  5 * 6 6');
     }).to.throw('Missing operator at 11');
+
+    expect(function () {
+      tokenize('(1+)*5');
+    }).to.throw(/Extra/);
+
+    expect(function () {
+      tokenize('(1+2)*5-');
+    }).to.throw(/Extra/);
   });
-  
+
+  test('parentheses', function () {
+    expect(function () {
+      tokenize('()');
+    }).to.throw('Empty parentheses at 1');
+
+    expect(function () {
+      tokenize('(1+())');
+    }).to.throw(/Empty parentheses/);
+  });
+
   test('negative numbers', function () {
     assert.deepEqual(tokenize('5+-6').map(v => v.value), [5, '+', -6]);
     assert.deepEqual(tokenize('-5+-6').map(v => v.value), [-5, '+', -6]);
@@ -69,6 +89,7 @@ suite('evaluate', function () {
     assert.equal(evaluate('4 * (2 - (3 + 5))'), -24);
     assert.equal(evaluate('4 * (2 - 3 + 5)'), 16);
     assert.equal(evaluate('3 + 2 * 4 + (6 - 2) / 3'), 12 + 1 / 3);
+    assert.equal(evaluate('(((1)))'), 1);
   });
 
   test('associativity', function () {
