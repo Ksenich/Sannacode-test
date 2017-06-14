@@ -7,34 +7,46 @@ function tokenize(str) {
   var re = /((\d|\.)+)|(\+|-|\/|\*|\^)|(\()|(\))|(\s)|(.)/g
   //        12         3               4    5    6    7    
   var m, result = [];
+  var token, prevToken = { type: null };
   while (m = re.exec(str)) {
+    token = null;
     // number
     if (m[1]) {
       var value = parseFloat(m[1], 10);
       if (isNaN(value) || value != m[1]) {
         throw new Error('Invalid number at ' + m.index)
       }
-      result.push({
+      token = {
         type: 'number',
         value: value,
         index: m.index,
-      });
+      };
     }
     // operator
-    if (m[3]) result.push({
+    if (m[3]) token = {
       type: 'operator',
       value: m[3],
       index: m.index
-    });
-    if (m[4]) result.push({
+    };
+    if (m[4]) token = {
       type: 'lp',
       index: m.index
-    })
-    if (m[5]) result.push({
+    };
+    if (m[5]) token = {
       type: 'rp',
       index: m.index
-    })
-    if (m[7]) throw new Error('Malformed input:"' + m[7] + '" at ' + m.index);
+    };
+    if (m[7]) throw new Error('Malformed input: "' + m[7] + '" at ' + m.index);
+    if (token) {
+      if (token.type === 'operator' && !(prevToken.type === 'number' || prevToken.type === 'rp')) {
+        throw new Error('Illegal operator at ' + token.index);
+      }
+      if (token.type === 'number' && prevToken.type === 'number') {
+        throw new Error('Missing operator at ' + token.index);
+      }
+      result.push(token);
+      prevToken = token;
+    }
   }
   return result;
 }
@@ -135,7 +147,7 @@ function onRightParens(outputQueue, operatorStack, token) {
 function OQPush(outputQueue, op) {
   var v1 = outputQueue.pop();
   var v2 = outputQueue.pop();
-  if(v1 === void 0 || v2 === void 0){
+  if (v1 === void 0 || v2 === void 0) {
     throw new Error('OQ too short.')
   }
   outputQueue.push(op.apply(v2, v1));

@@ -15,16 +15,24 @@ suite('tokenize', function () {
     assert.deepEqual(tokenize('23.5*2').map(v => v.value), [23.5, '*', 2])
   });
 
-  test('exceptions', function(){
-    expect(function(){
+  test('exceptions', function () {
+    expect(function () {
       tokenize('safdgfh');
     }).to.throw(/at 0/);
-    expect(function(){
+    expect(function () {
       tokenize('1 + ( 5 * 6afdsg');
     }).to.throw(/at 11/);
-    expect(function(){
+    expect(function () {
       tokenize('1 + 5.5.5');
     }).to.throw(/at 4/);
+
+    // no unary minus support
+    expect(function () {
+      tokenize('1 +  5 * - 6');
+    }).to.throw('Illegal operator at 9');
+    expect(function () {
+      tokenize('1 +  5 * 6 6');
+    }).to.throw('Missing operator at 11');
   });
 });
 
@@ -57,19 +65,13 @@ suite('calculate', function () {
     assert.equal(calculate(tokenize('(2 ^ 3) ^ 2')), 64); //
   });
 
-  test('exceptions', function(){
-    expect(function(){
+  test('exceptions', function () {
+    expect(function () {
       calculate(tokenize('1 + ( 5 * 6'));
     }).to.throw(/"\(" at 4/);
-    expect(function(){
+    expect(function () {
       calculate(tokenize('1 +  5 * 6)'));
     }).to.throw(/"\)" at 10/);
-    expect(function(){
-      calculate(tokenize('1 +  5 * - 6'));
-    }).to.throw();
-    expect(function(){
-      calculate(tokenize('1 +  5 * 6 6'));
-    }).to.throw();
   });
 });
 
