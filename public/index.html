@@ -6,29 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
   <style>
     .input-number {
       text-align: right;
     }
 
     .calculator {
-      display: inline-block;
+      max-width: 400px;
     }
 
     .row {
-      display: table-row;
+      min-width: 240px;
     }
 
     .col {
-      display: table-cell;
+      min-width: 60px;
     }
 
-    .keyboard {
-      width: 100%;
-      display: table;
-    }
-
-    button {
+    .key {
       width: 100%;
       height: 100%;
     }
@@ -37,41 +33,49 @@
 
 <body>
   <script src="calculator.js"></script>
-  <div id="calculator" class="calculator">
-    <input type="text" id="output" class="input-number" disabled>
-    <form action="javascript:equals()">
-      <input type="text" id="input" class="input-number">
-    </form>
-    <div id="keyboard" class="keyboard">
-      <div class="row">
-        <div class="col"><button onclick="val('(')">(</button></div>
-        <div class="col"><button onclick="val(')')">)</button></div>
-        <div class="col"><button onclick="clearInput()">C</button></div>
-        <div class="col"><button onclick="op('/')">/</button></div>
+  <div id="calculator" class="calculator container">
+    <div class="row">
+      <div class="input-field">
+        <input type="text" id="output" class="input-number" disabled>
+      </div>
+    </div>
+    <div class="row">
+      <form action="javascript:equals()">
+        <div class="input-field">
+          <input type="text" id="input" class="input-number">
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div id="keyboard" class="keyboard">
+        <div class="row">
+          <div class="col s3"><button class="btn key" onclick="val('(')">(</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(')')">)</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="clearInput()">CE</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="op('/')">/</button class="btn key"></div>
       </div>
       <div class="row">
-        <div class="col"><button onclick="val(7)">7</button></div>
-        <div class="col"><button onclick="val(8)">8</button></div>
-        <div class="col"><button onclick="val(9)">9</button></div>
-        <div class="col"><button onclick="op('*')">*</button></div>
+        <div class="col s3"><button class="btn key" onclick="val(7)">7</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(8)">8</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(9)">9</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="op('*')">*</button class="btn key"></div>
       </div>
       <div class="row">
-        <div class="col"><button onclick="val(4)">4</button></div>
-        <div class="col"><button onclick="val(5)">5</button></div>
-        <div class="col"><button onclick="val(6)">6</button></div>
-        <div class="col"><button onclick="op('-')">-</button></div>
+        <div class="col s3"><button class="btn key" onclick="val(4)">4</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(5)">5</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(6)">6</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="op('-')">-</button class="btn key"></div>
       </div>
       <div class="row">
-        <div class="col"><button onclick="val(1)">1</button></div>
-        <div class="col"><button onclick="val(2)">2</button></div>
-        <div class="col"><button onclick="val(3)">3</button></div>
-        <div class="col"><button onclick="op('+')">+</button></div>
+        <div class="col s3"><button class="btn key" onclick="val(1)">1</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(2)">2</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val(3)">3</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="op('+')">+</button class="btn key"></div>
       </div>
       <div class="row">
-        <div class="col"></div>
-        <div class="col"><button onclick="val(0)">0</button></div>
-        <div class="col"><button onclick="val('.')">.</button></div>
-        <div class="col"><button onclick="equals()">=</button></div>
+        <div class="col s3 offset-s3"><button class="btn key" onclick="val(0)">0</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="val('.')">.</button class="btn key"></div>
+        <div class="col s3"><button class="btn key" onclick="equals()">=</button class="btn key"></div>
       </div>
     </div>
   </div>
@@ -92,6 +96,8 @@
       input.value = '';
     }
   </script>
+  <!--<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>-->
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>-->
 </body>
 
 </html>
