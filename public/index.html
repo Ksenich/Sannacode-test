@@ -83,8 +83,13 @@
     var output = document.getElementById('output');
     var input = document.getElementById('input');
     function equals() {
-      output.value = evaluate(input.value);
-      clearInput();
+      try {
+        var value = evaluate(input.value);
+        output.value = value;
+        clearInput();
+      } catch (e) {
+        output.value = e.message;
+      }
     }
     function val(str) {
       input.value += str;

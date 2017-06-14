@@ -11,7 +11,7 @@ function tokenize(str) {
     // number
     if (m[1]) {
       var value = parseFloat(m[1], 10);
-      if (isNaN(value)) {
+      if (isNaN(value) || value != m[1]) {
         throw new Error('Invalid number at ' + m.index)
       }
       result.push({
@@ -34,7 +34,7 @@ function tokenize(str) {
       type: 'rp',
       index: m.index
     })
-    if (m[7]) throw new Error('Malformed input:"' + m[5] + '" at ' + m.index);
+    if (m[7]) throw new Error('Malformed input:"' + m[7] + '" at ' + m.index);
   }
   return result;
 }
@@ -91,6 +91,9 @@ function calculate(list) {
     OQPush(outputQueue, op);
   }
   // return outputQueue
+  if (outputQueue.length !== 1) {
+    throw new Error('OQ.length = ' + outputQueue.length);
+  }
   return outputQueue[0];
 }
 
@@ -132,5 +135,8 @@ function onRightParens(outputQueue, operatorStack, token) {
 function OQPush(outputQueue, op) {
   var v1 = outputQueue.pop();
   var v2 = outputQueue.pop();
+  if(v1 === void 0 || v2 === void 0){
+    throw new Error('OQ too short.')
+  }
   outputQueue.push(op.apply(v2, v1));
 }

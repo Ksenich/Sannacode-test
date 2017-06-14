@@ -1,5 +1,6 @@
 mocha.setup('tdd');
 var assert = chai.assert;
+var expect = chai.expect;
 
 suite('tokenize', function () {
   test('single digit numbers', function () {
@@ -12,7 +13,19 @@ suite('tokenize', function () {
 
   test('numbers with point', function () {
     assert.deepEqual(tokenize('23.5*2').map(v => v.value), [23.5, '*', 2])
-  })
+  });
+
+  test('exceptions', function(){
+    expect(function(){
+      tokenize('safdgfh');
+    }).to.throw(/at 0/);
+    expect(function(){
+      tokenize('1 + ( 5 * 6afdsg');
+    }).to.throw(/at 11/);
+    expect(function(){
+      tokenize('1 + 5.5.5');
+    }).to.throw(/at 4/);
+  });
 });
 
 suite('calculate', function () {
@@ -43,5 +56,21 @@ suite('calculate', function () {
     assert.equal(calculate(tokenize('2 ^ 3 ^ 2')), 512); //
     assert.equal(calculate(tokenize('(2 ^ 3) ^ 2')), 64); //
   });
+
+  test('exceptions', function(){
+    expect(function(){
+      calculate(tokenize('1 + ( 5 * 6'));
+    }).to.throw(/"\(" at 4/);
+    expect(function(){
+      calculate(tokenize('1 +  5 * 6)'));
+    }).to.throw(/"\)" at 10/);
+    expect(function(){
+      calculate(tokenize('1 +  5 * - 6'));
+    }).to.throw();
+    expect(function(){
+      calculate(tokenize('1 +  5 * 6 6'));
+    }).to.throw();
+  });
 });
+
 mocha.run();
