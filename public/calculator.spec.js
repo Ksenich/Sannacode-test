@@ -19,24 +19,24 @@ suite('tokenize', function () {
     expect(function () {
       tokenize('safdgfh');
     }).to.throw(/at 0/);
+
     expect(function () {
       tokenize('1 + ( 5 * 6afdsg');
     }).to.throw(/at 11/);
+    
     expect(function () {
       tokenize('1 + 5.5.5');
     }).to.throw(/at 4/);
 
-    // no unary minus support
-    // expect(function () {
-    //   tokenize('1 +  5 * - 6');
-    // }).to.throw('Illegal operator at 9');
     expect(function () {
       tokenize('1 +  5 * / 6');
     }).to.throw('Illegal operator at 9');
+    
     expect(function () {
       tokenize('1 +  5 * 6 6');
     }).to.throw('Missing operator at 11');
   });
+  
   test('negative numbers', function () {
     assert.deepEqual(tokenize('5+-6').map(v => v.value), [5, '+', -6]);
     assert.deepEqual(tokenize('-5+-6').map(v => v.value), [-5, '+', -6]);

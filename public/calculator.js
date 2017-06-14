@@ -80,7 +80,7 @@ var operators = {
 }
 
 /**
- * uses shanting-yard algorithm to evaluate list of tokens as arithmetical expression
+ * Uses shunting-yard algorithm to evaluate list of tokens as arithmetical expression
  * @param {[string]} list 
  */
 function calculate(list) {
