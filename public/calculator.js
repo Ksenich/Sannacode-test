@@ -7,7 +7,7 @@ function tokenize(str) {
   var re = /((\d|\.)+)|(\+|-|\/|\*|\^)|(\()|(\))|(\s)|(.)/g
   //        12         3               4    5    6    7    
   var m, result = [];
-  var token, prevToken = { type: null };
+  var token, prevToken = { type: null }, negate = false;
   while (m = re.exec(str)) {
     token = null;
     // number
@@ -15,6 +15,10 @@ function tokenize(str) {
       var value = parseFloat(m[1], 10);
       if (isNaN(value) || value != m[1]) {
         throw new Error('Invalid number at ' + m.index)
+      }
+      if (negate) {
+        value = -value;
+        negate = false;
       }
       token = {
         type: 'number',
@@ -30,16 +34,23 @@ function tokenize(str) {
     };
     if (m[4]) token = {
       type: 'lp',
+      value: m[4],
       index: m.index
     };
     if (m[5]) token = {
       type: 'rp',
+      value: m[5],
       index: m.index
     };
     if (m[7]) throw new Error('Malformed input: "' + m[7] + '" at ' + m.index);
     if (token) {
       if (token.type === 'operator' && !(prevToken.type === 'number' || prevToken.type === 'rp')) {
-        throw new Error('Illegal operator at ' + token.index);
+        if (token.value === '-' && !negate) {
+          negate = !negate;
+          continue;
+        } else {
+          throw new Error('Illegal operator at ' + token.index);
+        }
       }
       if (token.type === 'number' && prevToken.type === 'number') {
         throw new Error('Missing operator at ' + token.index);

@@ -4,15 +4,15 @@ var expect = chai.expect;
 
 suite('tokenize', function () {
   test('single digit numbers', function () {
-    assert.deepEqual(tokenize('1+2').map(v => v.value), [1, '+', 2])
+    assert.deepEqual(tokenize('1+2').map(v => v.value), [1, '+', 2]);
   });
 
   test('multiple digit numbers', function () {
-    assert.deepEqual(tokenize('78*56').map(v => v.value), [78, '*', 56])
+    assert.deepEqual(tokenize('78*56').map(v => v.value), [78, '*', 56]);
   });
 
   test('numbers with point', function () {
-    assert.deepEqual(tokenize('23.5*2').map(v => v.value), [23.5, '*', 2])
+    assert.deepEqual(tokenize('23.5*2').map(v => v.value), [23.5, '*', 2]);
   });
 
   test('exceptions', function () {
@@ -37,6 +37,13 @@ suite('tokenize', function () {
       tokenize('1 +  5 * 6 6');
     }).to.throw('Missing operator at 11');
   });
+  test('negative numbers', function () {
+    assert.deepEqual(tokenize('5+-6').map(v => v.value), [5, '+', -6]);
+    assert.deepEqual(tokenize('-5+-6').map(v => v.value), [-5, '+', -6]);
+    // should we allow this?
+    // assert.deepEqual(tokenize('-5+--6').map(v => v.value), [-5, '+', 6]);
+    assert.deepEqual(tokenize('-5+(-6 -1)').map(v => v.value), [-5, '+', '(', -6, '-', 1, ')']);
+  });
 });
 
 suite('evaluate', function () {
@@ -49,6 +56,7 @@ suite('evaluate', function () {
   });
 
   test('priority', function () {
+    assert.equal(evaluate('1 + 2 - 4'), -1);
     assert.equal(evaluate('2 + 3 * 4'), 14);
     assert.equal(evaluate('2 * 3 + 4'), 10);
     assert.equal(evaluate('2 ^ 3 * 1 ^ 2'), 8);
@@ -75,6 +83,14 @@ suite('evaluate', function () {
     expect(function () {
       evaluate('1 +  5 * 6)');
     }).to.throw(/"\)" at 10/);
+  });
+
+  test('negative numbers', function () {
+    assert.equal(evaluate('5+-6'), -1);
+    assert.equal(evaluate('-5+-6'), -11);
+    // should we allow this?
+    // assert.equal(evaluate('-5+--6'), 1);
+    assert.equal(evaluate('-5+(-6 -1)'), -12);
   });
 });
 
