@@ -27,8 +27,11 @@ suite('tokenize', function () {
     }).to.throw(/at 4/);
 
     // no unary minus support
+    // expect(function () {
+    //   tokenize('1 +  5 * - 6');
+    // }).to.throw('Illegal operator at 9');
     expect(function () {
-      tokenize('1 +  5 * - 6');
+      tokenize('1 +  5 * / 6');
     }).to.throw('Illegal operator at 9');
     expect(function () {
       tokenize('1 +  5 * 6 6');
@@ -36,41 +39,41 @@ suite('tokenize', function () {
   });
 });
 
-suite('calculate', function () {
+suite('evaluate', function () {
   test('single expression', function () {
-    assert.equal(calculate(tokenize('1+2')), 3);
-    assert.equal(calculate(tokenize('1-2')), -1);
-    assert.equal(calculate(tokenize('2*3')), 6);
-    assert.equal(calculate(tokenize('1/2')), 0.5);
-    assert.equal(calculate(tokenize('2^3')), 8);
+    assert.equal(evaluate('1+2'), 3);
+    assert.equal(evaluate('1-2'), -1);
+    assert.equal(evaluate('2*3'), 6);
+    assert.equal(evaluate('1/2'), 0.5);
+    assert.equal(evaluate('2^3'), 8);
   });
 
   test('priority', function () {
-    assert.equal(calculate(tokenize('2 + 3 * 4')), 14);
-    assert.equal(calculate(tokenize('2 * 3 + 4')), 10);
-    assert.equal(calculate(tokenize('2 ^ 3 * 1 ^ 2')), 8);
-    assert.equal(calculate(tokenize('2 ^ 3 * 1 ^ 2 + 4 ^ 2 * 5')), 88);
+    assert.equal(evaluate('2 + 3 * 4'), 14);
+    assert.equal(evaluate('2 * 3 + 4'), 10);
+    assert.equal(evaluate('2 ^ 3 * 1 ^ 2'), 8);
+    assert.equal(evaluate('2 ^ 3 * 1 ^ 2 + 4 ^ 2 * 5'), 88);
   });
 
   test('parentheses', function () {
-    assert.equal(calculate(tokenize('(2 + 3) * 4')), 20);
-    assert.equal(calculate(tokenize('4 * (2 + 3)')), 20);
-    assert.equal(calculate(tokenize('4 * (2 - (3 + 5))')), -24);
-    assert.equal(calculate(tokenize('4 * (2 - 3 + 5)')), 16);
-    assert.equal(calculate(tokenize('3 + 2 * 4 + (6 - 2) / 3')), 12 + 1 / 3);
+    assert.equal(evaluate('(2 + 3) * 4'), 20);
+    assert.equal(evaluate('4 * (2 + 3)'), 20);
+    assert.equal(evaluate('4 * (2 - (3 + 5))'), -24);
+    assert.equal(evaluate('4 * (2 - 3 + 5)'), 16);
+    assert.equal(evaluate('3 + 2 * 4 + (6 - 2) / 3'), 12 + 1 / 3);
   });
 
   test('associativity', function () {
-    assert.equal(calculate(tokenize('2 ^ 3 ^ 2')), 512); //
-    assert.equal(calculate(tokenize('(2 ^ 3) ^ 2')), 64); //
+    assert.equal(evaluate('2 ^ 3 ^ 2'), 512); //
+    assert.equal(evaluate('(2 ^ 3) ^ 2'), 64); //
   });
 
   test('exceptions', function () {
     expect(function () {
-      calculate(tokenize('1 + ( 5 * 6'));
+      evaluate('1 + ( 5 * 6');
     }).to.throw(/"\(" at 4/);
     expect(function () {
-      calculate(tokenize('1 +  5 * 6)'));
+      evaluate('1 +  5 * 6)');
     }).to.throw(/"\)" at 10/);
   });
 });
