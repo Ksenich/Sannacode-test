@@ -32,14 +32,16 @@ suite('calculate', function () {
   });
 
   test('parentheses', function () {
-    assert.equal(calculate(tokenize('(2+3)*4')), 20);
-    assert.equal(calculate(tokenize('4*(2+3)')), 20);
+    assert.equal(calculate(tokenize('(2 + 3) * 4')), 20);
+    assert.equal(calculate(tokenize('4 * (2 + 3)')), 20);
+    assert.equal(calculate(tokenize('4 * (2 - (3 + 5))')), -24);
+    assert.equal(calculate(tokenize('4 * (2 - 3 + 5)')), 16);
     assert.equal(calculate(tokenize('3 + 2 * 4 + (6 - 2) / 3')), 12 + 1 / 3);
   });
-  
+
   test('associativity', function () {
-    assert.equal(calculate(tokenize('2^3^2')), 512); //
-    assert.equal(calculate(tokenize('(2^3)^2')), 64); //
+    assert.equal(calculate(tokenize('2 ^ 3 ^ 2')), 512); //
+    assert.equal(calculate(tokenize('(2 ^ 3) ^ 2')), 64); //
   });
 });
 mocha.run();
