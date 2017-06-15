@@ -79,7 +79,7 @@ function tokenize(str) {
   return result;
 }
 
-function op(o, p, f, a) {
+function _op(o, p, f, a) {
   return {
     operator: o,
     precedence: p,
@@ -89,11 +89,11 @@ function op(o, p, f, a) {
 }
 
 var operators = {
-  '+': op('+', 2, (a, b) => a + b),
-  '-': op('-', 2, (a, b) => a - b),
-  '/': op('/', 3, (a, b) => a / b),
-  '*': op('*', 3, (a, b) => a * b),
-  '^': op('^', 4, (a, b) => Math.pow(a, b), true),
+  '+': _op('+', 2, function (a, b) { return a + b; }),
+  '-': _op('-', 2, function (a, b) { return a - b; }),
+  '/': _op('/', 3, function (a, b) { return a / b; }),
+  '*': _op('*', 3, function (a, b) { return a * b; }),
+  '^': _op('^', 4, function (a, b) { return Math.pow(a, b) }, true),
 }
 
 /**
